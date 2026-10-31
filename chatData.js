@@ -1,5 +1,5 @@
 // 전체 단톡방 대화 내역 데이터베이스 (msg-101 ~ msg-1626)
-    export const rawChatData = [
+    window.chatData = [
       { type: "date", date: "2025년 2월 10일 월요일" },
       { id: "msg-101", sender: "은여주", isMe: true, time: "오전 12:23", unread: 7, lines: ["월공강인사람"] },
       { id: "msg-102", sender: "Myeong", isMe: false, time: "오전 12:29", unread: 7, lines: ["난 아님", "근데 왜?"] },
