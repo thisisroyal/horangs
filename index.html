@@ -139,6 +139,9 @@
         </div>
         <div class="px-4 flex space-x-2 mt-1 mb-4"><span class="bg-black text-white px-4 py-1.5 rounded-full text-[14px] font-bold">Friends 8</span></div>
         <div class="border-t border-gray-100/60 pt-4 px-4 space-y-4">
+        <div id="chatContainer" class="flex flex-col p-4 overflow-y-auto">
+    <!-- 여기에 채팅들이 들어감 -->
+        </div>
           function openChatRoom(roomName) {
     // 1. window.chatData에서 클릭한 방 이름("호랑이들", "김동" 등)의 데이터를 가져옵니다.
     const messages = window.chatData[roomName];
