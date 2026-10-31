@@ -139,14 +139,65 @@
         </div>
         <div class="px-4 flex space-x-2 mt-1 mb-4"><span class="bg-black text-white px-4 py-1.5 rounded-full text-[14px] font-bold">Friends 8</span></div>
         <div class="border-t border-gray-100/60 pt-4 px-4 space-y-4">
+          function openChatRoom(roomName) {
+    // 1. window.chatData에서 클릭한 방 이름("호랑이들", "김동" 등)의 데이터를 가져옵니다.
+    const messages = window.chatData[roomName];
+
+    if (!messages) {
+        console.warn(`"${roomName}"에 해당하는 대화 데이터를 찾을 수 없습니다.`);
+        return;
+    }
+
+    // 2. 대화 내용이 화면에 출력될 HTML 요소(컨테이너)를 선택합니다.
+    // ⚠️ 주의: 본인의 HTML 파일에 있는 실제 채팅창 영역의 id가 'chatContainer'가 아니라면 그 이름으로 바꿔주세요!
+    const chatContainer = document.getElementById('chatContainer'); 
+    if (!chatContainer) return;
+
+    // 3. 방을 열 때마다 기존에 있던 채팅 내용을 초기화합니다.
+    chatContainer.innerHTML = '';
+
+    // 4. 데이터 배열을 하나씩 돌면서 화면에 말풍선 HTML로 그려줍니다.
+    messages.forEach(item => {
+        if (item.type === 'date') {
+            // 날짜 구분선인 경우
+            const dateElement = document.createElement('div');
+            dateElement.className = 'chat-date-divider';
+            dateElement.textContent = item.date;
+            chatContainer.appendChild(dateElement);
+        } else {
+            // 일반 대화 메시지인 경우
+            const messageElement = document.createElement('div');
+            // 내가 보낸 메시지(isMe: true)인지 상대방인지에 따라 클래스 다르게 적용
+            messageElement.className = item.isMe ? 'my-message' : 'other-message';
+
+            // 여러 줄의 텍스트(<p> 태그)를 하나로 묶습니다.
+            let linesHtml = item.lines ? item.lines.map(line => `<p>${line}</p>`).join('') : '';
+            
+            messageElement.innerHTML = `
+                <div class="message-info">
+                    <span class="sender-name">${item.sender}</span>
+                    <span class="time">${item.time}</span>
+                </div>
+                <div class="message-bubble">
+                    ${linesHtml}
+                </div>
+            `;
+
+            chatContainer.appendChild(messageElement);
+        }
+    });
+
+    // 5. 메시지가 많을 때 스크롤을 항상 가장 아래로 내립니다.
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
             <!-- 깃허브에 업로드할 파일명과 정확히 일치하도록 설정 -->
             <div onclick="openChatRoom('myeong')" class="flex items-center space-x-3 cursor-pointer"><img src="./myeong.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">myeong</span></div>
             <div onclick="openChatRoom('김동')" class="flex items-center space-x-3 cursor-pointer"><img src="./kimdong.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">김동</span></div>
             <div onclick="openChatRoom('한동')" class="flex items-center space-x-3 cursor-pointer"><img src="./handong.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">한동</span></div>
-            <div onclick="openChatRoom('성호 오빠')" class="flex items-center space-x-3 cursor-pointer"><img src="./sunghopa.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">성호 오빠</span></div>
+            <div onclick="openChatRoom('성호오빠')" class="flex items-center space-x-3 cursor-pointer"><img src="./sunghopa.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">성호 오빠</span></div>
             <div onclick="openChatRoom('상히기니')" class="flex items-center space-x-3 cursor-pointer"><img src="./gini.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">상히기니</span></div>
-            <div onclick="openChatRoom('비니비니 언니')" class="flex items-center space-x-3 cursor-pointer"><img src="./bini.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">비니비니 언니</span></div>
-            <div onclick="openChatRoom('제로 언니')" class="flex items-center space-x-3 cursor-pointer"><img src="./zero.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">제로 언니</span></div>
+            <div onclick="openChatRoom('비니비니언니')" class="flex items-center space-x-3 cursor-pointer"><img src="./bini.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">비니비니 언니</span></div>
+            <div onclick="openChatRoom('제로언니')" class="flex items-center space-x-3 cursor-pointer"><img src="./zero.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">제로 언니</span></div>
             <div onclick="openChatRoom('운학이')" class="flex items-center space-x-3 cursor-pointer"><img src="./woonhak.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">운학이</span></div>
         </div>
       </div>
