@@ -6,7 +6,7 @@
   <title>iPhone 17 Pro Web Simulator (6.3" 19.6:9)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- CDN 지연 문제 해결: 같은 깃허브 저장소에 있는 파일을 직접(즉각) 불러오도록 상대경로 적용 -->
+  <!-- CDN 지연 문제 해결: 같은 깃허브 저장소에 있는 파일을 직접 불러오도록 상대경로 적용 -->
   <script src="./chatData.js"></script>
 
   <style>
@@ -23,8 +23,8 @@
     .folder-icon { background: rgba(180, 180, 180, 0.4); backdrop-filter: blur(10px); padding: 6px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 3px; }
     .folder-mini-app { background: #fff; border-radius: 3px; width: 100%; height: 100%; }
     .kt-group-profile { position: relative; width: 44px; height: 44px; }
-    .kt-group-img-1 { position: absolute; top: 0; left: 0; width: 28px; height: 28px; border-radius: 10px; border: 2px solid white; z-index: 1; object-fit: cover; }
-    .kt-group-img-2 { position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; border-radius: 10px; border: 2px solid white; z-index: 2; object-fit: cover; }
+    .kt-group-img-1 { position: absolute; top: 0; left: 0; width: 28px; height: 28px; border-radius: 10px; border: 2px solid white; z-index: 1; object-fit: cover; background-color: #e5e7eb; }
+    .kt-group-img-2 { position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; border-radius: 10px; border: 2px solid white; z-index: 2; object-fit: cover; background-color: #d1d5db; }
     input { user-select: auto; -webkit-user-select: auto; }
   </style>
 </head>
@@ -133,89 +133,59 @@
     
     <!-- APP: KAKAOTALK -->
     <div id="katalk-app" class="app-screen absolute inset-0 bg-white flex flex-col">
+       
+       <!-- 1. 친구 탭 -->
        <div id="kt-view-friends" class="flex-1 flex flex-col h-full bg-white overflow-y-auto pb-[60px]">
         <div class="pt-14 px-4 pb-2 flex justify-between items-center bg-white sticky top-0 z-20">
           <h1 class="text-[22px] font-bold text-black">은여주</h1>
         </div>
         <div class="px-4 flex space-x-2 mt-1 mb-4"><span class="bg-black text-white px-4 py-1.5 rounded-full text-[14px] font-bold">Friends 8</span></div>
         <div class="border-t border-gray-100/60 pt-4 px-4 space-y-4">
-          function openChatRoom(roomName) {
-    // 1. window.chatData에서 클릭한 방 이름("호랑이들", "김동" 등)의 데이터를 가져옵니다.
-    const messages = window.chatData[roomName];
-
-    if (!messages) {
-        console.warn(`"${roomName}"에 해당하는 대화 데이터를 찾을 수 없습니다.`);
-        return;
-    }
-
-    // 2. 대화 내용이 화면에 출력될 HTML 요소(컨테이너)를 선택합니다.
-    // ⚠️ 주의: 본인의 HTML 파일에 있는 실제 채팅창 영역의 id가 'chatContainer'가 아니라면 그 이름으로 바꿔주세요!
-    const chatContainer = document.getElementById('chatContainer'); 
-    if (!chatContainer) return;
-
-    // 3. 방을 열 때마다 기존에 있던 채팅 내용을 초기화합니다.
-    chatContainer.innerHTML = '';
-
-    // 4. 데이터 배열을 하나씩 돌면서 화면에 말풍선 HTML로 그려줍니다.
-    messages.forEach(item => {
-        if (item.type === 'date') {
-            // 날짜 구분선인 경우
-            const dateElement = document.createElement('div');
-            dateElement.className = 'chat-date-divider';
-            dateElement.textContent = item.date;
-            chatContainer.appendChild(dateElement);
-        } else {
-            // 일반 대화 메시지인 경우
-            const messageElement = document.createElement('div');
-            // 내가 보낸 메시지(isMe: true)인지 상대방인지에 따라 클래스 다르게 적용
-            messageElement.className = item.isMe ? 'my-message' : 'other-message';
-
-            // 여러 줄의 텍스트(<p> 태그)를 하나로 묶습니다.
-            let linesHtml = item.lines ? item.lines.map(line => `<p>${line}</p>`).join('') : '';
             
-            messageElement.innerHTML = `
-                <div class="message-info">
-                    <span class="sender-name">${item.sender}</span>
-                    <span class="time">${item.time}</span>
-                </div>
-                <div class="message-bubble">
-                    ${linesHtml}
-                </div>
-            `;
-
-            chatContainer.appendChild(messageElement);
-        }
-    });
-
-    // 5. 메시지가 많을 때 스크롤을 항상 가장 아래로 내립니다.
-    chatContainer.scrollTop = chatContainer.scrollHeight;
-}
-            <!-- 깃허브에 업로드할 파일명과 정확히 일치하도록 설정 -->
-            <div onclick="openChatRoom('myeong')" class="flex items-center space-x-3 cursor-pointer"><img src="./myeong.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">myeong</span></div>
-            <div onclick="openChatRoom('김동')" class="flex items-center space-x-3 cursor-pointer"><img src="./kimdong.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">김동</span></div>
-            <div onclick="openChatRoom('한동')" class="flex items-center space-x-3 cursor-pointer"><img src="./handong.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">한동</span></div>
-            <div onclick="openChatRoom('성호오빠')" class="flex items-center space-x-3 cursor-pointer"><img src="./sunghopa.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">성호 오빠</span></div>
-            <div onclick="openChatRoom('상히기니')" class="flex items-center space-x-3 cursor-pointer"><img src="./gini.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">상히기니</span></div>
-            <div onclick="openChatRoom('비니비니언니')" class="flex items-center space-x-3 cursor-pointer"><img src="./bini.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">비니비니 언니</span></div>
-            <div onclick="openChatRoom('제로언니')" class="flex items-center space-x-3 cursor-pointer"><img src="./zero.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">제로 언니</span></div>
-            <div onclick="openChatRoom('운학이')" class="flex items-center space-x-3 cursor-pointer"><img src="./woonhak.jpg" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">운학이</span></div>
+            <!-- chatData.js에 있는 키 값과 대소문자, 띄어쓰기를 100% 동일하게 일치시킨 onclick 이벤트 -->
+            <div onclick="openChatRoom('Myeong')" class="flex items-center space-x-3 cursor-pointer"><img src="./myeong.jpg" onerror="this.outerHTML='<div class=\'w-[44px] h-[44px] rounded-[16px] bg-gray-200 flex items-center justify-center font-bold\'>M</div>'" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">Myeong</span></div>
+            
+            <div onclick="openChatRoom('김동')" class="flex items-center space-x-3 cursor-pointer"><img src="./kimdong.jpg" onerror="this.outerHTML='<div class=\'w-[44px] h-[44px] rounded-[16px] bg-gray-200 flex items-center justify-center font-bold\'>김</div>'" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">김동</span></div>
+            
+            <div onclick="openChatRoom('한동')" class="flex items-center space-x-3 cursor-pointer"><img src="./handong.jpg" onerror="this.outerHTML='<div class=\'w-[44px] h-[44px] rounded-[16px] bg-gray-200 flex items-center justify-center font-bold\'>한</div>'" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">한동</span></div>
+            
+            <div onclick="openChatRoom('성호오빠')" class="flex items-center space-x-3 cursor-pointer"><img src="./sunghopa.jpg" onerror="this.outerHTML='<div class=\'w-[44px] h-[44px] rounded-[16px] bg-gray-200 flex items-center justify-center font-bold\'>성</div>'" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">성호 오빠</span></div>
+            
+            <div onclick="openChatRoom('상히기니')" class="flex items-center space-x-3 cursor-pointer"><img src="./gini.jpg" onerror="this.outerHTML='<div class=\'w-[44px] h-[44px] rounded-[16px] bg-gray-200 flex items-center justify-center font-bold\'>상</div>'" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">상히기니</span></div>
+            
+            <div onclick="openChatRoom('비니비니언니')" class="flex items-center space-x-3 cursor-pointer"><img src="./bini.jpg" onerror="this.outerHTML='<div class=\'w-[44px] h-[44px] rounded-[16px] bg-gray-200 flex items-center justify-center font-bold\'>비</div>'" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">비니비니 언니</span></div>
+            
+            <div onclick="openChatRoom('제로언니')" class="flex items-center space-x-3 cursor-pointer"><img src="./zero.jpg" onerror="this.outerHTML='<div class=\'w-[44px] h-[44px] rounded-[16px] bg-gray-200 flex items-center justify-center font-bold\'>제</div>'" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">제로 언니</span></div>
+            
+            <div onclick="openChatRoom('운학이')" class="flex items-center space-x-3 cursor-pointer"><img src="./woonhak.jpg" onerror="this.outerHTML='<div class=\'w-[44px] h-[44px] rounded-[16px] bg-gray-200 flex items-center justify-center font-bold\'>운</div>'" class="w-[44px] h-[44px] rounded-[16px] object-cover"/><span class="text-[15px] font-medium text-black">운학이</span></div>
         </div>
       </div>
+
+      <!-- 2. 채팅 탭 (그룹 채팅방 추가) -->
       <div id="kt-view-chats" class="flex-1 flex flex-col h-full bg-white overflow-y-auto pb-[60px] hidden">
         <div class="pt-14 px-4 pb-2"><h1 class="text-[24px] font-bold text-black">Chats</h1></div>
         <div class="px-4 space-y-4 pt-2">
-          <div onclick="openChatRoom('호랑이들', 9)" class="flex items-center justify-between cursor-pointer"><div class="flex items-center space-x-3"><div class="kt-group-profile"><img src="./myeong.jpg" class="kt-group-img-1"/><img src="./kimdong.jpg" class="kt-group-img-2"/></div><span class="text-[15px] font-medium text-black">호랑이들</span></div></div>
+          <div onclick="openChatRoom('호랑이들', 9)" class="flex items-center justify-between cursor-pointer"><div class="flex items-center space-x-3"><div class="kt-group-profile"><img src="./myeong.jpg" class="kt-group-img-1" onerror="this.style.display='none'"/><img src="./kimdong.jpg" class="kt-group-img-2" onerror="this.style.display='none'"/></div><span class="text-[15px] font-medium text-black">호랑이들</span></div></div>
+          
+          <div onclick="openChatRoom('My girls', 3)" class="flex items-center justify-between cursor-pointer"><div class="flex items-center space-x-3"><div class="w-[44px] h-[44px] rounded-[16px] bg-pink-100 flex items-center justify-center text-xl">👯‍♀️</div><span class="text-[15px] font-medium text-black">My girls</span></div></div>
+          
+          <div onclick="openChatRoom('11층', 3)" class="flex items-center justify-between cursor-pointer"><div class="flex items-center space-x-3"><div class="w-[44px] h-[44px] rounded-[16px] bg-blue-100 flex items-center justify-center text-xl">🏢</div><span class="text-[15px] font-medium text-black">11층</span></div></div>
         </div>
       </div>
 
+      <!-- 하단 네비게이션 바 -->
       <div id="kt-bottom-bar" class="absolute bottom-0 w-full h-[60px] bg-[#fafafa] border-t border-gray-200 flex justify-around items-center z-40">
         <button onclick="navKt('friends')" id="kt-tab-friends" class="text-black font-bold text-sm">Friends</button>
         <button onclick="navKt('chats')" id="kt-tab-chats" class="text-gray-400 font-bold text-sm">Chats</button>
       </div>
 
+      <!-- 3. 실제 채팅이 보여지는 대화방 뷰 -->
       <div id="kt-view-room" class="absolute inset-0 bg-[#abc1d1] z-50 flex flex-col hidden">
         <div class="pt-14 px-4 py-2 flex items-center bg-[#abc1d1]/95 sticky top-0"><button onclick="navKt('chats')" class="text-gray-800 text-[24px] w-12">‹</button><h1 id="chat-room-title" class="font-bold text-black text-[16px]"></h1></div>
+        
+        <!-- 말풍선이 생성되는 본문 컨테이너 -->
         <div id="chat-messages-area" class="flex-1 overflow-y-auto p-4 space-y-2 pb-16"></div>
+        
         <div class="absolute bottom-0 w-full h-[50px] bg-[#f5f5f5] flex items-center px-3 space-x-2">
           <div class="flex-1 bg-white h-[36px] rounded-full px-4 flex items-center border border-gray-200"><span class="text-[14px] text-gray-400">Type a message</span></div>
         </div>
@@ -250,6 +220,7 @@
     </div>
   </div>
 
+  <!-- 자바스크립트 로직 -->
   <script>
     function setTheme(mode) {
       const statusBar = document.getElementById('status-bar');
@@ -286,30 +257,94 @@
       }
     }
     
+    // 💡 [핵심] chatData.js 파일의 구조를 완벽하게 불러오는 새로운 함수
     function openChatRoom(name, count = '') {
+      // 상단 타이틀 세팅
       const titleEl = document.getElementById('chat-room-title');
       titleEl.innerHTML = count ? `${name} <span class="text-xs text-gray-500">${count}</span>` : name;
+      
+      // 대화창 본문 영역
       const messageArea = document.getElementById('chat-messages-area');
       messageArea.innerHTML = '';
       
+      // window.chatData에서 데이터 불러오기
       const messages = (window.chatData && window.chatData[name]) ? window.chatData[name] : [];
 
       if (messages.length === 0) {
-        messageArea.innerHTML = '<div class="text-center text-gray-500 text-xs py-10">No messages found.</div>';
+        messageArea.innerHTML = '<div class="text-center text-gray-500 text-xs py-10">대화 내용이 없습니다.</div>';
       } else {
         messages.forEach(msg => {
-          const msgDiv = document.createElement('div');
-          if (msg.isMe) {
-            msgDiv.className = 'flex justify-end items-end space-x-1 space-x-reverse mb-2.5';
-            msgDiv.innerHTML = `<div class="bg-[#FEE500] text-black px-3 py-1.5 rounded-l-lg rounded-br-lg text-[14px] shadow-sm">${msg.text}</div><span class="text-[10px] text-gray-600 mb-0.5">${msg.time}</span>`;
-          } else {
-            msgDiv.className = 'flex items-start space-x-2 mb-2.5';
-            msgDiv.innerHTML = `<div class="w-8 h-8 rounded-[12px] bg-gray-300 flex items-center justify-center text-white text-xs font-bold">${msg.sender.charAt(0)}</div><div class="flex flex-col"><span class="text-[11px] text-gray-700 mb-0.5">${msg.sender}</span><div class="flex items-end space-x-1"><div class="bg-white text-black px-3 py-1.5 rounded-r-lg rounded-bl-lg text-[14px] shadow-sm">${msg.text}</div><span class="text-[10px] text-gray-600 mb-0.5">${msg.time}</span></div></div>`;
+          // 1) 날짜 구분선 처리
+          if (msg.type === 'date') {
+            const dateDiv = document.createElement('div');
+            dateDiv.className = 'flex justify-center my-4';
+            dateDiv.innerHTML = `<span class="bg-black/10 text-gray-600 text-[11px] px-3 py-1 rounded-full">${msg.date}</span>`;
+            messageArea.appendChild(dateDiv);
+          } 
+          // 2) 일반 메시지 처리
+          else {
+            const msgDiv = document.createElement('div');
+            
+            // 텍스트(배열)를 HTML로 변환
+            let linesHtml = '';
+            if (msg.lines && msg.lines.length > 0) {
+              linesHtml = msg.lines.map(line => `<div class="mb-0.5 last:mb-0">${line}</div>`).join('');
+            }
+
+            // 미디어(사진)가 있을 경우 처리
+            if (msg.mediaKey) {
+               linesHtml = `<div class="bg-black/5 w-full h-[120px] rounded-md mb-1 flex items-center justify-center overflow-hidden border border-black/10 text-[10px] text-gray-500"><span class="px-2 text-center">[이미지: ${msg.mediaCaption || '사진'}]</span></div>` + linesHtml;
+            }
+
+            // 부재중 전화(call) 처리
+            if (msg.type === 'call') {
+               linesHtml = `📞 <strong>${msg.lines[0]}</strong>`;
+            }
+
+            // 내가 보낸 메시지
+            if (msg.isMe) {
+              msgDiv.className = 'flex justify-end items-end space-x-1 space-x-reverse mb-2';
+              msgDiv.innerHTML = `
+                <div class="flex flex-col items-end">
+                  <div class="bg-[#FEE500] text-black px-3 py-2 rounded-l-lg rounded-br-lg text-[14px] shadow-sm max-w-[220px] break-words">
+                    ${linesHtml}
+                  </div>
+                </div>
+                <span class="text-[10px] text-gray-500 mb-0.5 ml-1">${msg.time}</span>
+              `;
+            } 
+            // 상대방이 보낸 메시지
+            else {
+              msgDiv.className = 'flex items-start space-x-2 mb-2';
+              msgDiv.innerHTML = `
+                <div class="w-9 h-9 rounded-[12px] bg-gray-300 flex-shrink-0 flex items-center justify-center text-white text-[13px] font-bold shadow-sm overflow-hidden">
+                  ${msg.sender.charAt(0)}
+                </div>
+                <div class="flex flex-col">
+                  <span class="text-[11px] text-gray-600 mb-1 ml-1">${msg.sender}</span>
+                  <div class="flex items-end space-x-1">
+                    <div class="bg-white text-black px-3 py-2 rounded-r-lg rounded-bl-lg text-[14px] shadow-sm max-w-[220px] break-words">
+                      ${linesHtml}
+                    </div>
+                    <span class="text-[10px] text-gray-500 mb-0.5">${msg.time}</span>
+                  </div>
+                </div>
+              `;
+            }
+            messageArea.appendChild(msgDiv);
           }
-          messageArea.appendChild(msgDiv);
         });
       }
-      document.getElementById('kt-view-friends').classList.add('hidden'); document.getElementById('kt-view-chats').classList.add('hidden'); document.getElementById('kt-view-room').classList.remove('hidden');
+      
+      // 뷰 전환
+      document.getElementById('kt-view-friends').classList.add('hidden'); 
+      document.getElementById('kt-view-chats').classList.add('hidden'); 
+      document.getElementById('kt-view-room').classList.remove('hidden');
+      
+      // 화면이 전환되고 DOM이 생성될 시간을 아주 살짝 준 뒤 맨 밑으로 스크롤
+      setTimeout(() => {
+        messageArea.scrollTop = messageArea.scrollHeight;
+      }, 10);
     }
 
     function navigateToNotes(viewName) {
